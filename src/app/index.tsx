@@ -9,6 +9,10 @@ export default function HomePage() {
         <SearchBar />
         <LetterAcessibility />
       </View>
+      <View style={styles.headerContainer}>
+        <Text accessibilityRole="header" style={styles.titulo}>Ultrassom Terapêutico</Text>
+        <Text accessibilityRole="header" style={styles.subTitulo}>Conceitos, parâmetros e cuidados explicados de forma simples. Use a busca acima ou toque em um tema.</Text>
+      </View>
     </View>
   );
 }
@@ -104,5 +108,23 @@ const styles = StyleSheet.create({
   },
   letterTextSpaced: {
     marginLeft: 8,
+  },
+  headerContainer: {
+    alignItems: "center",
+  },
+  titulo: {
+    fontSize: 42,
+    fontWeight: "bold",
+    marginBottom: 16,
+    paddingVertical: 12,
+    fontFamily: "comic-sans",
+  },
+  subTitulo: {
+    width: "90%",
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 16,
+    paddingVertical: 10,
+    fontFamily: "arial",
   },
 });
