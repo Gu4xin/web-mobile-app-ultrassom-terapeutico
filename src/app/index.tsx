@@ -38,15 +38,32 @@ function SearchBar() {
 }
 
 export function LetterAcessibility() {
+  const [selectedSize, setSelectedSize] = useState<"decrease" | "increase" | null>(null);
+
   return (
     <View style={styles.containerLetterAcessibility}>
       <View style={styles.letterBox}>
         <Text style={styles.letrasText}>Letras:</Text>
-        <Pressable>
-          <Text style={styles.letterText}>A-</Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ selected: selectedSize === "decrease" }}
+          onPress={() => setSelectedSize("decrease")}
+        >
+          <Text style={[
+            styles.letterText,
+            selectedSize === "decrease" && styles.letterTextSelected,
+          ]}>A-</Text>
         </Pressable>
-        <Pressable>
-          <Text style={[styles.letterText, styles.letterTextSpaced]}>A+</Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ selected: selectedSize === "increase" }}
+          onPress={() => setSelectedSize("increase")}
+        >
+          <Text style={[
+            styles.letterText,
+            styles.letterTextSpaced,
+            selectedSize === "increase" && styles.letterTextSelected,
+          ]}>A+</Text>
         </Pressable>
       </View>
     </View>
@@ -99,6 +116,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 12,
     paddingVertical: 12,
+  },
+  letterTextSelected: {
+    backgroundColor: "#2563eb",
+    borderColor: "#2563eb",
+    color: "#ffffff",
   },
   letrasText: {
     fontSize: 16,
