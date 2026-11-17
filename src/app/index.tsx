@@ -1,333 +1,95 @@
-import { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-
-const DATA = [
-  {
-    id: '1',
-    title: 'O que é o ultrassom terapêutico?',
-    description: 'Um recurso da fisioterapia que usa ondas sonoras para apoiar diferentes tratamentos.',
-  },
-  {
-    id: '2',
-    title: 'Como funciona a aplicação?',
-    description: 'O profissional movimenta o aplicador sobre a região escolhida, com gel e parâmetros adequados.',
-  }
-]
+import { StyleSheet, View } from "react-native";
+import { AppText, HomeContents, PageFooter, PageFrame, PageHeader, palette, SearchPanel } from "../components/ui";
 
 export default function HomePage() {
-  const [busca, setBusca] = useState("");
-  const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
-  const normalizedSearch = busca.trim().toLowerCase();
-  const filteredArticles = DATA.filter((item) =>
-    item.title.toLowerCase().includes(normalizedSearch) &&
-    (!selectedArticleId || item.id === selectedArticleId)
-  );
-
   return (
-    <ScrollView
-      style={styles.screen}
-      contentContainerStyle={styles.container}
-    >
-      <View style={styles.topBar}>
-        <SearchBar
-          value={busca}
-          selectedArticleId={selectedArticleId}
-          onChangeText={(text) => {
-            setBusca(text);
-            setSelectedArticleId(null);
-          }}
-          onSelectArticle={(item) => {
-            setBusca(item.title);
-            setSelectedArticleId(item.id);
-          }}
-        />
-        <LetterAcessibility />
-      </View>
-      <View style={styles.headerContainer}>
-        <Text accessibilityRole="header" style={styles.titulo}>Ultrassom Terapêutico</Text>
-        <Text accessibilityRole="header" style={styles.subTitulo}>Conceitos, parâmetros e cuidados explicados de forma simples. Use a busca acima ou toque em um tema.</Text>
-      </View>
-      <View style={styles.articlesList}>
-        {filteredArticles.map((item) => (
-          <Articles
-            key={item.id}
-            title={item.title}
-            description={item.description}
-          />
-        ))}
-      </View>
-    </ScrollView>
-  );
-}
-
-function SearchBar({
-  value,
-  selectedArticleId,
-  onChangeText,
-  onSelectArticle,
-}: {
-  value: string;
-  selectedArticleId: string | null;
-  onChangeText: (text: string) => void;
-  onSelectArticle: (item: (typeof DATA)[number]) => void;
-}) {
-  const normalizedSearch = value.trim().toLowerCase();
-  const filteredArticles = DATA.filter((item) =>
-    item.title.toLowerCase().includes(normalizedSearch)
-  );
-  const showSuggestions = normalizedSearch.length > 0 && selectedArticleId === null;
-
-  return (
-    <View style={styles.searchBarContainer}>
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Pesquisar..."
-        value={value}
-        onChangeText={onChangeText}
-        returnKeyType="search"
-      />
-      {showSuggestions && (
-        <View style={styles.searchResults}>
-          {filteredArticles.length > 0 ? (
-            filteredArticles.map((item) => (
-              <Pressable
-                key={item.id}
-                accessibilityRole="button"
-                accessibilityHint="Mostra este artigo na lista."
-                onPress={() => onSelectArticle(item)}
-                style={styles.searchResult}
-              >
-                <Text style={styles.searchResultText}>{item.title}</Text>
-              </Pressable>
-            ))
-          ) : (
-            <Text style={styles.noSearchResults}>Nenhum artigo encontrado.</Text>
-          )}
+    <PageFrame>
+      <PageHeader />
+      <View style={styles.hero}>
+        <View style={styles.heroCopy}>
+          <View style={styles.eyebrowRow}>
+            <View style={styles.eyebrowLine} />
+            <AppText style={styles.eyebrow}>UM GUIA PARA ESTUDANTES</AppText>
+          </View>
+          <AppText accessibilityRole="header" style={styles.title}>Ultrassom{`\n`}terapêutico, sem{`\n`}mistério.</AppText>
+          <AppText style={styles.description}>
+            Conceitos, aplicações e cuidados para entender o recurso com clareza — e estudar com responsabilidade.
+          </AppText>
         </View>
-      )}
-    </View>
+        <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={styles.heroArt}>
+          <View style={styles.artDiscOuter}>
+            <View style={styles.artDiscMiddle}>
+              <View style={styles.artDiscInner} />
+            </View>
+          </View>
+          <View style={styles.artBeamOne} />
+          <View style={styles.artBeamTwo} />
+          <View style={styles.artBeamThree} />
+          <View style={styles.artPanel}>
+            <AppText style={styles.artPanelLabel}>CAMPO DE ESTUDO</AppText>
+            <AppText style={styles.artPanelValue}>01 — 04</AppText>
+            <AppText style={styles.artPanelNote}>conceito · prática · segurança</AppText>
+          </View>
+          <AppText style={styles.artNumber}>US</AppText>
+        </View>
+      </View>
+
+      <SearchPanel />
+
+      <View style={styles.topicsHeading}>
+        <View>
+          <AppText style={styles.sectionEyebrow}>EXPLORE O GUIA</AppText>
+          <AppText accessibilityRole="header" style={styles.topicsTitle}>Comece por aqui</AppText>
+        </View>
+        <AppText style={styles.topicCount}>04 TEMAS</AppText>
+      </View>
+      <View style={styles.topicList}>
+        <HomeContents />
+      </View>
+
+      <View style={styles.disclaimer}>
+        <View style={styles.disclaimerMark}><View style={styles.disclaimerDot} /></View>
+        <View style={styles.disclaimerCopy}>
+          <AppText style={styles.disclaimerTitle}>Conhecimento com contexto</AppText>
+          <AppText style={styles.disclaimerText}>
+            Material educativo, não clínico. Parâmetros dependem do equipamento, do contexto e da avaliação profissional.
+          </AppText>
+        </View>
+      </View>
+      <PageFooter />
+    </PageFrame>
   );
-}
-
-export function LetterAcessibility() {
-  const [selectedSize, setSelectedSize] = useState<"decrease" | "increase" | null>(null);
-
-  return (
-    <View style={styles.containerLetterAcessibility}>
-      <View style={styles.letterBox}>
-        <Text style={styles.letrasText}>Letras:</Text>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityState={{ selected: selectedSize === "decrease" }}
-          onPress={() => setSelectedSize("decrease")}
-        >
-          <Text style={[
-            styles.letterText,
-            selectedSize === "decrease" && styles.letterTextSelected,
-          ]}>A-</Text>
-        </Pressable>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityState={{ selected: selectedSize === "increase" }}
-          onPress={() => setSelectedSize("increase")}
-        >
-          <Text style={[
-            styles.letterText,
-            styles.letterTextSpaced,
-            selectedSize === "increase" && styles.letterTextSelected,
-          ]}>A+</Text>
-        </Pressable>
-      </View>
-    </View>
-  )
-}
-
-export function Articles({
-  title,
-  description,
-  onPress,
-}: {
-  title: string;
-  description: string;
-  onPress?: () => void;
-}) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={`${title}. ${description}`}
-      accessibilityHint="A navegação para o artigo ainda não está configurada."
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.articleCard,
-        pressed && styles.articleCardPressed,
-      ]}
-    >
-      <View
-        style={styles.articleImage}
-      >
-        <Text style={styles.imagePlaceholder}>Imagine uma imagem aqui</Text>
-      </View>
-      <View style={styles.articleText}>
-        <Text style={styles.articleTitle}>{title}</Text>
-        <Text style={styles.articleDescription}>{description}</Text>
-      </View>
-    </Pressable>
-  )
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: "#f7f7f7",
-  },
-  container: {
-    flexGrow: 1,
-    alignItems: "center",
-    paddingTop: 32,
-    paddingBottom: 32,
-    backgroundColor: "#f7f7f7",
-  },
-  articlesList: {
-    width: "90%",
-    maxWidth: 520,
-    alignItems: "center",
-    gap: 20,
-    paddingTop: 32,
-  },
-  topBar: {
-    width: "90%",
-    maxWidth: 520,
-    flexDirection: "row",
-    alignItems: "flex-start",
-  },
-  searchBarContainer: {
-    flex: 1,
-    minWidth: 0,
-  },
-  containerLetterAcessibility: {
-    marginLeft: 12,
-  },
-  searchInput: {
-    width: "100%",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: "#c2c5ca",
-    borderRadius: 10,
-    backgroundColor: "#ffffff",
-    fontSize: 16,
-  },
-  searchResults: {
-    marginTop: 6,
-    borderWidth: 1,
-    borderColor: "#c2c5ca",
-    borderRadius: 10,
-    backgroundColor: "#ffffff",
-    overflow: "hidden",
-  },
-  searchResult: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e5e7eb",
-  },
-  searchResultText: {
-    color: "#1f2937",
-    fontSize: 15,
-  },
-  noSearchResults: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    color: "#4b5563",
-    fontSize: 14,
-  },
-  searchText: {
-    width: "100%",
-    marginTop: 12,
-    color: "#c7c7c7",
-  },
-  letterBox: {
-    flexDirection: "row",
-  },
-  letterText: {
-    fontSize: 16,
-    color: "#333333",
-    borderWidth: 1,
-    borderColor: "#c2c5ca",
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-  },
-  letterTextSelected: {
-    backgroundColor: "#6bd396",
-    borderColor: "#6bd396",
-    color: "#ffffff",
-  },
-  letrasText: {
-    fontSize: 16,
-    color: "#333333",
-    paddingHorizontal: 10,
-    paddingVertical: 12,
-  },
-  letterTextSpaced: {
-    marginLeft: 8,
-  },
-  headerContainer: {
-    alignItems: "center",
-  },
-  titulo: {
-    fontSize: 42,
-    fontWeight: "bold",
-    marginBottom: 16,
-    paddingVertical: 12,
-    fontFamily: "comic-sans",
-  },
-  subTitulo: {
-    width: "90%",
-    fontSize: 16,
-    textAlign: "center",
-    marginBottom: 16,
-    paddingVertical: 10,
-    fontFamily: "arial",
-  },
-  articleCard: {
-    width: "100%",
-    maxWidth: 380,
-    height: 240,
-    borderWidth: 1,
-    borderColor: "#6bd396",
-    borderRadius: 13,
-    overflow: "hidden",
-    backgroundColor: "#ffffff",
-  },
-  articleCardPressed: {
-    opacity: 0.85,
-  },
-  articleImage: {
-    height: "50%",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#6bd396",
-  },
-  imagePlaceholder: {
-    color: "#000000",
-    fontSize: 14,
-  },
-  articleText: {
-    height: "50%",
-    justifyContent: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-  },
-  articleTitle: {
-    marginBottom: 6,
-    color: "#1f2937",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  articleDescription: {
-    color: "#4b5563",
-    fontSize: 13,
-    lineHeight: 18,
-  },
+  hero: { minHeight: 318, marginBottom: 27, borderRadius: 22, backgroundColor: "#E8F1E9", overflow: "hidden", padding: 22, justifyContent: "space-between" },
+  heroCopy: { zIndex: 2 },
+  eyebrowRow: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 15 },
+  eyebrowLine: { width: 18, height: 2, backgroundColor: palette.green, borderRadius: 2 },
+  eyebrow: { color: palette.greenDeep, fontSize: 9, letterSpacing: 1, fontWeight: "800" },
+  title: { color: palette.ink, fontSize: 38, lineHeight: 43, fontWeight: "800", letterSpacing: -1.2 },
+  description: { maxWidth: 320, color: "#536B60", fontSize: 14, lineHeight: 21, marginTop: 12 },
+  heroArt: { position: "absolute", width: 190, height: 180, right: -13, bottom: -5, alignItems: "center", justifyContent: "center" },
+  artDiscOuter: { width: 138, height: 138, borderRadius: 70, borderWidth: 1, borderColor: "#A8CDB1", alignItems: "center", justifyContent: "center", transform: [{ rotate: "-24deg" }] },
+  artDiscMiddle: { width: 99, height: 99, borderRadius: 50, borderWidth: 1, borderColor: "#8EBB9A", alignItems: "center", justifyContent: "center" },
+  artDiscInner: { width: 56, height: 56, borderRadius: 28, backgroundColor: "#CFE3D3", borderWidth: 10, borderColor: "#DDECE0" },
+  artBeamOne: { position: "absolute", width: 138, height: 1, backgroundColor: "#9EC5A7", transform: [{ rotate: "26deg" }] },
+  artBeamTwo: { position: "absolute", width: 138, height: 1, backgroundColor: "#9EC5A7", transform: [{ rotate: "-26deg" }] },
+  artBeamThree: { position: "absolute", width: 1, height: 138, backgroundColor: "#9EC5A7" },
+  artPanel: { position: "absolute", bottom: 11, left: 3, paddingVertical: 7, paddingHorizontal: 10, borderRadius: 10, backgroundColor: "rgba(245,248,244,0.88)" },
+  artPanelLabel: { color: palette.muted, fontSize: 7, fontWeight: "800", letterSpacing: 0.8 },
+  artPanelValue: { color: palette.greenDeep, fontSize: 13, fontWeight: "800", marginTop: 2 },
+  artPanelNote: { color: palette.muted, fontSize: 7, marginTop: 1 },
+  artNumber: { position: "absolute", top: 18, right: 25, color: "#A7C8AD", fontSize: 16, fontWeight: "800", letterSpacing: 1.5 },
+  topicsHeading: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 13 },
+  sectionEyebrow: { color: palette.green, fontSize: 9, letterSpacing: 1.2, fontWeight: "800" },
+  topicsTitle: { color: palette.ink, fontSize: 24, fontWeight: "800", marginTop: 4 },
+  topicCount: { color: palette.muted, fontSize: 9, fontWeight: "700", letterSpacing: 0.7, paddingBottom: 4 },
+  topicList: { gap: 0 },
+  disclaimer: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 9, paddingVertical: 15, paddingHorizontal: 14, borderRadius: 14, backgroundColor: palette.warningSoft },
+  disclaimerMark: { width: 28, height: 28, borderRadius: 10, backgroundColor: "#EBDCC1", alignItems: "center", justifyContent: "center" },
+  disclaimerDot: { width: 7, height: 7, borderWidth: 1.5, borderColor: palette.warning, borderRadius: 4 },
+  disclaimerCopy: { flex: 1 },
+  disclaimerTitle: { color: "#72502E", fontSize: 12, fontWeight: "800" },
+  disclaimerText: { color: "#765F46", fontSize: 11, lineHeight: 17, marginTop: 3 },
 });
