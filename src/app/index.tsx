@@ -1,6 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import { AppText, HomeContents, PageFooter, PageFrame, PageHeader, SearchPanel } from "../components/ui";
-import { palette } from "../components/ui";
+import { AppText, HomeContents, PageFooter, PageFrame, PageHeader, palette, SearchPanel } from "../components/ui";
 
 export default function HomePage() {
   return (

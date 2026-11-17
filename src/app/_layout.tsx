@@ -1,8 +1,7 @@
 import { Stack } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AccessibilityProvider } from "../components/accessibility";
-import { palette } from "../components/ui";
-import { BottomNavigation } from "../components/ui";
+import { BottomNavigation, palette } from "../components/ui";
 
 export default function RootLayout() {
   return (

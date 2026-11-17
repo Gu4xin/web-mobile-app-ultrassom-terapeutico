@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Alert, Linking, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { usePathname, useRouter } from "expo-router";
 import type { ReactNode } from "react";
 import type { TextProps } from "react-native";
-import { ARTICLES, type Article, type Reference, searchArticles } from "./content";
+import { ARTICLES, type Article, searchArticles } from "./content";
 import { useAccessibility } from "./accessibility";
 
 export const palette = {
@@ -250,68 +250,21 @@ export function ArticleScreen({ article }: { article: Article }) {
         <AppText style={styles.articleLead}>{article.summary}</AppText>
         <View style={styles.articleMeta}>
           <View style={styles.metaRule} />
-          <AppText style={styles.metaText}>LEITURA EDUCATIVA · {article.sections.length} TÓPICOS</AppText>
+          <AppText style={styles.metaText}>ÁREA DE CONTEÚDO</AppText>
         </View>
       </View>
 
-      <View style={styles.articleBody}>
-        {article.sections.map((section, index) => (
-          <View key={section.heading} style={styles.articleSection}>
-            <View style={styles.sectionIndex}>
-              <AppText style={styles.sectionIndexText}>{String(index + 1).padStart(2, "0")}</AppText>
-            </View>
-            <View style={styles.sectionCopy}>
-              <AppText accessibilityRole="header" style={styles.sectionHeading}>{section.heading}</AppText>
-              <AppText style={styles.sectionBody}>{section.body}</AppText>
-            </View>
-          </View>
-        ))}
-      </View>
-
-      <View style={styles.educationNote}>
-        <View style={styles.noteStripe} />
-        <View style={styles.noteCopy}>
-          <AppText style={styles.noteTitle}>Importante</AppText>
-          <AppText style={styles.noteBody}>
-            Conteúdo para estudo. Não substitui avaliação profissional, orientações institucionais nem o manual do fabricante.
-          </AppText>
+      <View style={styles.contentSlot}>
+        <View style={styles.slotMark}>
+          <AppText style={styles.slotNumber}>{article.number}</AppText>
         </View>
-      </View>
-
-      <View style={styles.referencesBlock}>
-        <AppText style={styles.referencesEyebrow}>PARA LEITURA E CONSULTA</AppText>
-        <AppText accessibilityRole="header" style={styles.referencesTitle}>Referências</AppText>
-        {article.references.map((reference) => (
-          <ReferenceLink key={reference.url} reference={reference} />
-        ))}
+        <AppText accessibilityRole="header" style={styles.slotTitle}>Estrutura pronta</AppText>
+        <AppText style={styles.slotBody}>
+          Esta tela está organizada para receber o conteúdo desenvolvido pelo responsável por esta área.
+        </AppText>
       </View>
       <PageFooter />
     </PageFrame>
-  );
-}
-
-function ReferenceLink({ reference }: { reference: Reference }) {
-  const open = async () => {
-    try {
-      await Linking.openURL(reference.url);
-    } catch {
-      Alert.alert("Link indisponível", "Não foi possível abrir esta referência neste momento.");
-    }
-  };
-  return (
-    <Pressable
-      accessibilityRole="link"
-      accessibilityLabel={`${reference.title}. ${reference.publication}`}
-      accessibilityHint="Abre a referência em uma página externa."
-      onPress={open}
-      style={({ pressed }) => [styles.referenceLink, pressed && styles.pressed]}
-    >
-      <View style={styles.referenceCopy}>
-        <AppText style={styles.referenceTitle}>{reference.title}</AppText>
-        <AppText style={styles.referencePublication}>{reference.publication}</AppText>
-      </View>
-      <AppText style={styles.externalMark}>↗</AppText>
-    </Pressable>
   );
 }
 
@@ -453,26 +406,11 @@ const styles = StyleSheet.create({
   articleMeta: { flexDirection: "row", alignItems: "center", gap: 10, marginTop: 22 },
   metaRule: { width: 30, height: 2, borderRadius: 1, backgroundColor: palette.green },
   metaText: { color: palette.muted, fontSize: 9, fontWeight: "700", letterSpacing: 1 },
-  articleBody: { borderTopWidth: 1, borderTopColor: palette.line, paddingTop: 4 },
-  articleSection: { flexDirection: "row", gap: 14, paddingVertical: 20, borderBottomWidth: 1, borderBottomColor: palette.line },
-  sectionIndex: { width: 30, height: 30, borderRadius: 10, backgroundColor: palette.greenSoft, alignItems: "center", justifyContent: "center", marginTop: 1 },
-  sectionIndexText: { color: palette.greenDeep, fontSize: 10, fontWeight: "800" },
-  sectionCopy: { flex: 1 },
-  sectionHeading: { color: palette.ink, fontSize: 18, fontWeight: "700", lineHeight: 25, marginBottom: 7 },
-  sectionBody: { color: "#40594E", fontSize: 15, lineHeight: 24 },
-  educationNote: { flexDirection: "row", marginTop: 22, backgroundColor: palette.greenSoft, borderRadius: 14, overflow: "hidden" },
-  noteStripe: { width: 4, backgroundColor: palette.green },
-  noteCopy: { flex: 1, paddingHorizontal: 15, paddingVertical: 14 },
-  noteTitle: { color: palette.greenDeep, fontSize: 13, fontWeight: "800", marginBottom: 4 },
-  noteBody: { color: "#40594E", fontSize: 13, lineHeight: 20 },
-  referencesBlock: { marginTop: 32 },
-  referencesEyebrow: { color: palette.green, fontSize: 9, fontWeight: "800", letterSpacing: 1.2 },
-  referencesTitle: { color: palette.ink, fontSize: 23, fontWeight: "800", marginTop: 6, marginBottom: 13 },
-  referenceLink: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 13, paddingHorizontal: 14, marginBottom: 8, borderRadius: 13, borderWidth: 1, borderColor: palette.line, backgroundColor: palette.surface },
-  referenceCopy: { flex: 1 },
-  referenceTitle: { color: palette.greenDeep, fontSize: 13, fontWeight: "700", lineHeight: 18 },
-  referencePublication: { color: palette.muted, fontSize: 11, lineHeight: 16, marginTop: 4 },
-  externalMark: { color: palette.green, fontSize: 19, fontWeight: "600" },
+  contentSlot: { minHeight: 220, borderWidth: 1, borderStyle: "dashed", borderColor: "#BFD4C3", borderRadius: 16, backgroundColor: palette.greenPale, padding: 22, justifyContent: "center", alignItems: "flex-start" },
+  slotMark: { width: 36, height: 36, borderRadius: 12, backgroundColor: palette.greenSoft, alignItems: "center", justifyContent: "center", marginBottom: 16 },
+  slotNumber: { color: palette.greenDeep, fontSize: 11, fontWeight: "800" },
+  slotTitle: { color: palette.ink, fontSize: 20, fontWeight: "800", marginBottom: 7 },
+  slotBody: { maxWidth: 460, color: palette.muted, fontSize: 14, lineHeight: 22 },
   footer: { flexDirection: "row", alignItems: "center", flexWrap: "wrap", gap: 12, paddingTop: 22, marginTop: 28, borderTopWidth: 1, borderTopColor: palette.line },
   footerText: { flex: 1, minWidth: 145, color: palette.muted, fontSize: 11 },
   footerHome: { paddingVertical: 7, paddingHorizontal: 2 },
